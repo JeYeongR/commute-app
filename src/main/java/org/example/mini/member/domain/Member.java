@@ -30,7 +30,7 @@ public class Member extends DateTimeBaseEntity {
   @Column(nullable = false)
   private LocalDate birthDay;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   private Team team;
 
   @Builder
@@ -42,6 +42,11 @@ public class Member extends DateTimeBaseEntity {
 
   public String getTeamName() {
     return this.team.getName();
+  }
+
+  public void joinTeam(Team team) {
+    this.team = team;
+    team.getMembers().add(this);
   }
 
   private MemberRole grantRole(boolean isManager) {

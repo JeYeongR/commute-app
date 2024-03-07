@@ -23,7 +23,7 @@ public class Team extends DateTimeBaseEntity {
   @Column(nullable = false)
   private String name;
 
-  @OneToMany(mappedBy = "team")
+  @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Member> members = new ArrayList<>();
 
   @Builder
