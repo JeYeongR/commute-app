@@ -2,6 +2,7 @@ package org.example.mini.member.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.mini.common.entity.DateTimeBaseEntity;
@@ -32,13 +33,18 @@ public class Member extends DateTimeBaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Team team;
 
-  public Member(String name, MemberRole role, LocalDate birthDay) {
+  @Builder
+  public Member(String name, boolean isManager, LocalDate birthDay) {
     this.name = name;
-    this.role = role;
+    this.role = this.grantRole(isManager);
     this.birthDay = birthDay;
   }
 
   public String getTeamName() {
     return this.team.getName();
+  }
+
+  private MemberRole grantRole(boolean isManager) {
+    return isManager ? MemberRole.MANAGER : MemberRole.MEMBER;
   }
 }
