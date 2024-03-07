@@ -1,6 +1,7 @@
 package org.example.mini.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.mini.common.exception.ConflictException;
 import org.example.mini.common.exception.NotFoundException;
 import org.example.mini.member.domain.Member;
 import org.example.mini.member.domain.MemberRepository;
@@ -27,8 +28,11 @@ public class MemberService {
     Team foundTeam = this.teamRepository.findByName(request.teamName())
         .orElseThrow(() -> new NotFoundException("NOT_FOUND_TEAM"));
 
-    member.joinTeam(foundTeam);
+    if (request.isManager() && foundTeam.hasManager()) {
+      throw new ConflictException("ALREADY_EXIST_MANAGER");
+    }
 
+    member.joinTeam(foundTeam);
     this.memberRepository.save(member);
   }
 

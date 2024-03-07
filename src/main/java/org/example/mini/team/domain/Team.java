@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.mini.common.entity.DateTimeBaseEntity;
 import org.example.mini.member.domain.Member;
+import org.example.mini.member.domain.MemberRole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,5 +30,21 @@ public class Team extends DateTimeBaseEntity {
   @Builder
   public Team(String name) {
     this.name = name;
+  }
+
+  public boolean hasManager() {
+    return this.members.stream().anyMatch(member -> member.getRole().equals(MemberRole.MANAGER));
+  }
+
+  public String getManagerName() {
+    return this.members.stream()
+        .filter(member -> member.getRole().equals(MemberRole.MANAGER))
+        .map(Member::getName)
+        .findFirst()
+        .orElse(null);
+  }
+
+  public int getMemberCount() {
+    return this.members != null ? this.members.size() : 0;
   }
 }
